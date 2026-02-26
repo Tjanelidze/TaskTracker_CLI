@@ -1,7 +1,9 @@
-package main.java.com.tasktracker;
+package com.tasktracker;
+
+import java.util.Arrays;
 
 public class Main {
-  public static void main(String[] args) {
-    int i = 32;
-  }
+    public static void main(String[] args) {
+ 
+    }
 }
