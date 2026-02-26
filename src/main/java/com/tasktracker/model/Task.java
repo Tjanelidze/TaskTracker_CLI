@@ -1,27 +1,28 @@
 package com.tasktracker.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Task {
-    private int id;
+    private UUID id;
     private String description;
     private TaskStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Task(int id, String description, TaskStatus status) {
+    public Task(UUID id, String description, TaskStatus status) {
         this.id = id;
-        this.description = description;
+        setDescription(description);
         this.status = status;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -31,7 +32,7 @@ public class Task {
 
     public void setDescription(String description) {
         if (description == null) throw new IllegalArgumentException("Description cannot be null!");
-        
+
         this.description = description;
     }
 
@@ -57,5 +58,16 @@ public class Task {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
