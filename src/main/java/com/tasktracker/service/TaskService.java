@@ -34,6 +34,11 @@ public class TaskService {
 
     private static String getString(String content, Task newTask) {
         int lastBracketIndex = content.lastIndexOf(']');
+
+        if (lastBracketIndex == -1) {
+            throw new IllegalStateException("Malformed tasks.json: missing closing bracket");
+        }
+
         String beginning = content.substring(0, lastBracketIndex);
 
         String comma = beginning.trim().endsWith("[") ? "" : ",";
