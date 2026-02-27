@@ -25,16 +25,25 @@ public class TaskService {
             String content = Files.readString(filePath).trim();
             int lastBracket = content.lastIndexOf("]");
             if (lastBracket == -1) {
-                Files.writeString(filePath, "[\n" + newTaskJson + "\n]");
+                System.out.println("An error occurred: tasks.json is malformed.");
                 return;
             }
 
-            String baseContent = content.substring(0, content.lastIndexOf("]")).trim();
+            String baseContent = content.substring(0, lastBracket).trim();
+            int closingBracket = baseContent.lastIndexOf('}');
+            boolean duplicateBracket = baseContent.substring(0, baseContent.length() - 1).trim().endsWith("}");
+
+            if (closingBracket == -1 || duplicateBracket) {
+                System.out.println("An error occurred: tasks.json is malformed.");
+                return;
+            }
+
             if (baseContent.endsWith(",")) {
                 baseContent = baseContent.substring(0, baseContent.length() - 1);
             }
 
-            String updatedContent = baseContent + ",\n" + newTaskJson + "\n]";
+            String separator = baseContent.equals("[") ? "\n" : ",\n";
+            String updatedContent = baseContent + separator + newTaskJson + "\n]";
             Files.writeString(filePath, updatedContent);
 
             System.out.println("Task added successfully (ID: " + newTask.getId() + ")");
@@ -47,6 +56,11 @@ public class TaskService {
     public void listTask() {
         try {
             String content = Files.readString(filePath);
+
+            if (!Files.exists(filePath) || Files.size(filePath) == 0) {
+                System.out.println("[]");
+                return;
+            }
 
             System.out.println(content);
         } catch (IOException e) {
