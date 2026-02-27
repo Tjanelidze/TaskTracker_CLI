@@ -86,7 +86,8 @@ public class TaskService {
 
             String content = Files.readString(filePath).trim();
 
-            int idIndex = content.indexOf(taskId);
+            String idPattern = "\"id\": \"" + taskId + "\"";
+            int idIndex = content.indexOf(idPattern);
             if (idIndex == -1) {
                 System.out.println("Task ID not found.");
                 return;
@@ -102,20 +103,23 @@ public class TaskService {
     }
 
     private static String getString(String description, int idIndex, String content) {
-        int start = idIndex;
-        while (start >= 0 && content.charAt(start) != '{') {
-            start--;
-        }
+        int start = content.lastIndexOf('{', idIndex);
+        int end = content.indexOf('}', idIndex);
 
-        int end = idIndex;
-        while (end < content.length() && content.charAt(end) != '}') {
-            end++;
+        if (start == -1 || end == -1 || start >= end) {
+            return content;
         }
 
         String targetObject = content.substring(start, end + 1);
         String key = "\"description\": \"";
-        int startOfValue = targetObject.indexOf(key) + key.length();
-        int endOfValue = targetObject.indexOf("\",", startOfValue);
+
+        int keyIndex = targetObject.indexOf(key);
+        if (keyIndex == -1) return content;
+
+        int startOfValue = keyIndex + key.length();
+        int endOfValue = targetObject.indexOf("\"", startOfValue);
+
+        if (endOfValue == -1) return content;
 
         String updatedObject = targetObject.substring(0, startOfValue)
                 + description

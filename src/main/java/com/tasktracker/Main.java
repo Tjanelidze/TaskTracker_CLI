@@ -26,14 +26,14 @@ public class Main {
             case "list":
                 taskService.listTask();
                 break;
-                
+
             case "update":
                 if (args.length < 3) {
-                    System.out.println("Usage: task-cli update <description><task-ID>");
+                    System.out.println("Usage: task-cli update <task-ID> <description>");
                     return;
                 }
-                String updateDesc = args[1];
-                String taskId = args[2];
+                String taskId = args[1];
+                String updateDesc = args[2];
                 taskService.update(updateDesc, taskId);
                 break;
             default:
