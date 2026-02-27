@@ -163,10 +163,23 @@ public class TaskService {
             return content;
         }
 
-        boolean isComma = content.substring(0, start).trim().endsWith(",");
-        int lastComma = content.substring(0, start).lastIndexOf(",");
+        int removeStart = start;
+        int removeEnd = end + 1;
 
-        return content.trim().substring(0, isComma ? lastComma : start) + content.substring(end + 1);
+        while (removeEnd < content.length() && Character.isWhitespace(content.charAt(removeEnd))) {
+            removeEnd++;
+        }
+        if (removeEnd < content.length() && content.charAt(removeEnd) == ',') {
+            return content.substring(0, start) + content.substring(removeEnd + 1);
+        }
+
+        while (removeStart > 0 && Character.isWhitespace(content.charAt(removeStart - 1))) {
+            removeStart--;
+        }
+        if (removeStart > 0 && content.charAt(removeStart - 1) == ',') {
+            removeStart--;
+        }
+        return content.substring(0, removeStart) + content.substring(end + 1);
     }
 
     private String formatTaskToJson(Task task) {
