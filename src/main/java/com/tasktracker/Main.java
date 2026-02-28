@@ -1,5 +1,6 @@
 package com.tasktracker;
 
+import com.tasktracker.model.TaskStatus;
 import com.tasktracker.repository.TaskRepository;
 import com.tasktracker.service.TaskService;
 
@@ -46,6 +47,30 @@ public class Main {
                 }
                 String deleteTaskId = args[1];
                 taskService.delete(deleteTaskId);
+                break;
+
+            case "mark-in-progress":
+                if (args.length < 2) {
+                    System.out.println("Usage: task-cli mark-in-progress <task-ID>");
+                    return;
+                }
+                taskService.updateStatus(TaskStatus.IN_PROGRESS, args[1]);
+                break;
+
+            case "mark-done":
+                if (args.length < 2) {
+                    System.out.println("Usage: task-cli mark-done <task-ID>");
+                    return;
+                }
+                taskService.updateStatus(TaskStatus.DONE, args[1]);
+                break;
+
+            case "mark-todo":
+                if (args.length < 2) {
+                    System.out.println("Usage: task-cli mark-todo <task-ID>");
+                    return;
+                }
+                taskService.updateStatus(TaskStatus.TODO, args[1]);
                 break;
             default:
                 System.out.println("Unknown command: " + command);

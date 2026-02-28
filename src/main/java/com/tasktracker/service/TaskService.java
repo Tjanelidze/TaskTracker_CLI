@@ -65,6 +65,28 @@ public class TaskService {
         }
     }
 
+
+    public void updateStatus(TaskStatus status, String taskId) {
+        List<Task> tasks = new ArrayList<>(repository.getAll());
+        boolean found = false;
+
+        for (Task task : tasks) {
+            if (taskId.equals(task.getId().toString())) {
+                task.setStatus(status);
+                task.setUpdatedAt(LocalDateTime.now());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Task ID not found.");
+        } else {
+            repository.saveAll(tasks);
+            System.out.println("Task has been updated.");
+        }
+    }
+
     public void delete(String taskId) {
         List<Task> tasks = new ArrayList<>(repository.getAll());
 
