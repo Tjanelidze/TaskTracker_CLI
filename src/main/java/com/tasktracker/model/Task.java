@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Task {
-    private UUID id;
+    private final UUID id;
     private String description;
     private TaskStatus status;
     private LocalDateTime createdAt;
@@ -28,10 +28,6 @@ public class Task {
 
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getDescription() {
@@ -66,16 +62,5 @@ public class Task {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "  \n  {\n" +
-                "    \"id\": \"" + id + "\",\n" +
-                "    \"description\": \"" + description + "\",\n" +
-                "    \"status\": \"" + status + "\",\n" +
-                "    \"createdAt\": \"" + createdAt + "\",\n" +
-                "    \"updatedAt\": \"" + updatedAt + "\"\n" +
-                "  }\n";
     }
 }

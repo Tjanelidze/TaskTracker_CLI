@@ -10,7 +10,17 @@ import java.util.List;
 import java.util.UUID;
 
 public class TaskService {
-    private final TaskRepository repository = new TaskRepository();
+    private final TaskRepository repository;
+
+
+    public TaskService(TaskRepository repository) {
+        this.repository = repository;
+    }
+
+    public TaskService() {
+        repository = null;
+    }
+
 
     public void add(String description) {
         List<Task> tasks = new ArrayList<>(repository.getAll());
@@ -63,11 +73,10 @@ public class TaskService {
 
     public void delete(String taskId) {
         List<Task> tasks = new ArrayList<>(repository.getAll());
-        boolean found = false;
 
-        tasks.removeIf(task -> task.getId().toString().equals(taskId));
+        boolean removed = tasks.removeIf(task -> task.getId().toString().equals(taskId));
 
-        if (!found) {
+        if (!removed) {
             System.out.println("Task ID not found.");
         } else {
             repository.saveAll(tasks);

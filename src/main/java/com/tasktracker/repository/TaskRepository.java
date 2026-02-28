@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,13 @@ public class TaskRepository {
             }
             String tasks = Files.readString(filePath);
             String omitOpeningBracket = tasks.replace("[", "");
-            String[] sterilizedTasks = omitOpeningBracket.replace("]", "").trim().split("},\\s*");
+            String payload = omitOpeningBracket.replace("]", "").trim();
+
+            if (payload.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            String[] sterilizedTasks = payload.split("},\\s*");
             List<Task> result = new ArrayList<>();
 
             for (String rawJson : sterilizedTasks) {
@@ -42,7 +49,7 @@ public class TaskRepository {
             }
 
             return new ArrayList<>(result);
-        } catch (IOException e) {
+        } catch (IOException | DateTimeParseException | IllegalArgumentException e) {
             throw new RuntimeException("Failed to read tasks from file", e);
         }
     }
@@ -56,6 +63,7 @@ public class TaskRepository {
 
         return rawJson.substring(valueStart, valueEnd);
     }
+
 
     public void saveAll(List<Task> tasks) {
         StringBuilder sb = new StringBuilder("[");
@@ -80,10 +88,16 @@ public class TaskRepository {
     private String formatToJson(Task task) {
         return "  \n  {\n" +
                 "    \"id\": \"" + task.getId() + "\",\n" +
-                "    \"description\": \"" + task.getDescription() + "\",\n" +
+                "    \"description\": \"" + escape(task.getDescription()) + "\",\n" +
                 "    \"status\": \"" + task.getStatus() + "\",\n" +
                 "    \"createdAt\": \"" + task.getCreatedAt() + "\",\n" +
                 "    \"updatedAt\": \"" + task.getUpdatedAt() + "\"\n" +
                 "  }";
+    }
+
+    private String escape(String value) {
+        return value.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n");
     }
 }
