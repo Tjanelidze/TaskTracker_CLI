@@ -1,5 +1,6 @@
 package com.tasktracker;
 
+import com.tasktracker.model.TaskStatus;
 import com.tasktracker.repository.TaskRepository;
 import com.tasktracker.service.TaskService;
 
@@ -36,7 +37,8 @@ public class Main {
                 }
                 String taskId = args[1];
                 String updateDesc = args[2];
-                taskService.update(updateDesc, taskId);
+                String successMessage = "Task status has been updated";
+                taskService.updateTask(taskId, task -> task.setDescription(updateDesc), successMessage);
                 break;
 
             case "delete":
@@ -46,6 +48,20 @@ public class Main {
                 }
                 String deleteTaskId = args[1];
                 taskService.delete(deleteTaskId);
+                break;
+
+            case "mark-in-progress":
+            case "mark-done":
+            case "mark-todo":
+                if (args.length < 2) {
+                    System.out.println("Usage: task-cli " + command + " <task-ID>");
+                    return;
+                }
+
+                String statusStr = command.replace("mark-", "").replace("-", "_").toUpperCase();
+                TaskStatus status = TaskStatus.valueOf(statusStr);
+
+                taskService.updateStatus(args[1], status);
                 break;
             default:
                 System.out.println("Unknown command: " + command);
