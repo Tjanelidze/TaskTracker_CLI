@@ -59,9 +59,23 @@ public class TaskRepository {
         if (keyIndex == -1) return "";
 
         int valueStart = keyIndex + key.length();
-        int valueEnd = rawJson.indexOf("\"", valueStart);
+        int valueEnd = valueStart;
+        while (valueEnd < rawJson.length()) {
+            char c = rawJson.charAt(valueEnd);
+            if (c == '"') break;
+            if (c == '\\' && valueEnd + 1 < rawJson.length()) {
+                valueEnd++;
+            }
+            valueEnd++;
+        }
 
-        return rawJson.substring(valueStart, valueEnd);
+        return unescape(rawJson.substring(valueStart, valueEnd));
+    }
+
+    private String unescape(String value) {
+        return value.replace("\\n", "\n")
+                .replace("\\\"", "\"")
+                .replace("\\\\", "\\");
     }
 
 
