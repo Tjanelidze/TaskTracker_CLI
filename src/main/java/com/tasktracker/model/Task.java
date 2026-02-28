@@ -10,6 +10,14 @@ public class Task {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public Task(UUID id, String description, TaskStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        setDescription(description);
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     public Task(UUID id, String description, TaskStatus status) {
         this.id = id;
         setDescription(description);
@@ -62,12 +70,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        return "  \n  {\n" +
+                "    \"id\": \"" + id + "\",\n" +
+                "    \"description\": \"" + description + "\",\n" +
+                "    \"status\": \"" + status + "\",\n" +
+                "    \"createdAt\": \"" + createdAt + "\",\n" +
+                "    \"updatedAt\": \"" + updatedAt + "\"\n" +
+                "  }\n";
     }
 }
